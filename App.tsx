@@ -20,7 +20,7 @@ const TensorCamera = cameraWithTensors(Camera);
 const IS_ANDROID = Platform.OS === 'android';
 const IS_IOS = Platform.OS === 'ios';
 
-// https://js.tensorflow.org/api_react_native/0.2.1/#Media-Camera
+// ADDED - https://js.tensorflow.org/api_react_native/0.2.1/#Media-Camera
 const texture = IS_ANDROID ?
   {
     height: 1200,
@@ -306,7 +306,7 @@ export default function App() {
           rotation={getTextureRotationAngleInDegrees()}
           onReady={handleCameraStream}
 
-          // https://js.tensorflow.org/api_react_native/0.2.1/#Media-Camera
+          // ADDED - https://js.tensorflow.org/api_react_native/0.2.1/#Media-Camera
           useCustomShadersToResize={false}
           cameraTextureWidth={texture.width}
           cameraTextureHeight={texture.height} />
