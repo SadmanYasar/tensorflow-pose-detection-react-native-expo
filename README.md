@@ -16,6 +16,8 @@ Added 3 additional props to TensorCamera according to [this](https://js.tensorfl
 
 Also updated tsconfig.json to use settings for Expo SDK 49.
 
+Update 9/23/2023: Stopping development on this project for now. Will experiment with Flutter and Firebase MLkit.
+
 # Installation
 
 To run it locally:

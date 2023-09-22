@@ -1,34 +1,35 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Dimensions, Platform } from 'react-native';
+import React, { useEffect, useState, useRef } from "react";
+import { StyleSheet, Text, View, Dimensions, Platform } from "react-native";
 
-import { Camera } from 'expo-camera';
+import { Camera } from "expo-camera";
 
-import * as tf from '@tensorflow/tfjs';
-import * as posedetection from '@tensorflow-models/pose-detection';
-import * as ScreenOrientation from 'expo-screen-orientation';
+import * as tf from "@tensorflow/tfjs";
+import * as posedetection from "@tensorflow-models/pose-detection";
+import * as ScreenOrientation from "expo-screen-orientation";
 import {
   bundleResourceIO,
   cameraWithTensors,
-} from '@tensorflow/tfjs-react-native';
-import Svg, { Circle } from 'react-native-svg';
-import { ExpoWebGLRenderingContext } from 'expo-gl';
-import { CameraType } from 'expo-camera/build/Camera.types';
+} from "@tensorflow/tfjs-react-native";
+import Svg, { Circle } from "react-native-svg";
+import { ExpoWebGLRenderingContext } from "expo-gl";
+import { CameraType } from "expo-camera/build/Camera.types";
 
 // tslint:disable-next-line: variable-name
 const TensorCamera = cameraWithTensors(Camera);
 
-const IS_ANDROID = Platform.OS === 'android';
-const IS_IOS = Platform.OS === 'ios';
+const IS_ANDROID = Platform.OS === "android";
+const IS_IOS = Platform.OS === "ios";
 
 // ADDED - https://js.tensorflow.org/api_react_native/0.2.1/#Media-Camera
-const texture = IS_ANDROID ?
-  {
-    height: 1200,
-    width: 1600,
-  } : {
-    height: 1920,
-    width: 1080,
-  }
+const texture = IS_ANDROID
+  ? {
+      height: 1200,
+      width: 1600,
+    }
+  : {
+      height: 1920,
+      width: 1080,
+    };
 
 // Camera preview size.
 //
@@ -37,7 +38,7 @@ const texture = IS_ANDROID ?
 // devices.
 //
 // This might not cover all cases.
-const CAM_PREVIEW_WIDTH = Dimensions.get('window').width;
+const CAM_PREVIEW_WIDTH = Dimensions.get("window").width;
 const CAM_PREVIEW_HEIGHT = CAM_PREVIEW_WIDTH / (IS_IOS ? 9 / 16 : 3 / 4);
 
 // The score threshold for pose detection results.
@@ -52,7 +53,7 @@ const OUTPUT_TENSOR_WIDTH = 180;
 const OUTPUT_TENSOR_HEIGHT = OUTPUT_TENSOR_WIDTH / (IS_IOS ? 9 / 16 : 3 / 4);
 
 // Whether to auto-render TensorCamera preview.
-const AUTO_RENDER = false;
+const AUTO_RENDER = true;
 
 // Whether to load model from app bundle (true) or through network (false).
 const LOAD_MODEL_FROM_BUNDLE = false;
@@ -65,9 +66,7 @@ export default function App() {
   const [fps, setFps] = useState(0);
   const [orientation, setOrientation] =
     useState<ScreenOrientation.Orientation>();
-  const [cameraType, setCameraType] = useState<CameraType>(
-    CameraType.front
-  );
+  const [cameraType, setCameraType] = useState<CameraType>(CameraType.front);
   // Use `useRef` so that changing it won't trigger a re-render.
   //
   // - null: unset (initial value).
@@ -101,9 +100,9 @@ export default function App() {
         enableSmoothing: true,
       };
       if (LOAD_MODEL_FROM_BUNDLE) {
-        const modelJson = require('./offline_model/model.json');
-        const modelWeights1 = require('./offline_model/group1-shard1of2.bin');
-        const modelWeights2 = require('./offline_model/group1-shard2of2.bin');
+        const modelJson = require("./offline_model/model.json");
+        const modelWeights1 = require("./offline_model/group1-shard1of2.bin");
+        const modelWeights2 = require("./offline_model/group1-shard2of2.bin");
         movenetModelConfig.modelUrl = bundleResourceIO(modelJson, [
           modelWeights1,
           modelWeights2,
@@ -188,10 +187,10 @@ export default function App() {
               key={`skeletonkp_${k.name}`}
               cx={cx}
               cy={cy}
-              r='4'
-              strokeWidth='2'
-              fill='#00AA00'
-              stroke='white'
+              r="4"
+              strokeWidth="2"
+              fill="#00AA00"
+              stroke="white"
             />
           );
         });
@@ -217,8 +216,7 @@ export default function App() {
         onTouchEnd={handleSwitchCameraType}
       >
         <Text>
-          Switch to{' '}
-          {cameraType === CameraType.front ? 'back' : 'front'} camera
+          Switch to {cameraType === CameraType.front ? "back" : "front"} camera
         </Text>
       </View>
     );
@@ -305,11 +303,9 @@ export default function App() {
           resizeDepth={3}
           rotation={getTextureRotationAngleInDegrees()}
           onReady={handleCameraStream}
-
           // ADDED - https://js.tensorflow.org/api_react_native/0.2.1/#Media-Camera
           useCustomShadersToResize={false}
-          cameraTextureWidth={texture.width}
-          cameraTextureHeight={texture.height} />
+        />
         {renderPose()}
         {renderFps()}
         {renderCameraTypeSwitcher()}
@@ -320,53 +316,53 @@ export default function App() {
 
 const styles = StyleSheet.create({
   containerPortrait: {
-    position: 'relative',
+    position: "relative",
     width: CAM_PREVIEW_WIDTH,
     height: CAM_PREVIEW_HEIGHT,
-    marginTop: Dimensions.get('window').height / 2 - CAM_PREVIEW_HEIGHT / 2,
+    marginTop: Dimensions.get("window").height / 2 - CAM_PREVIEW_HEIGHT / 2,
   },
   containerLandscape: {
-    position: 'relative',
+    position: "relative",
     width: CAM_PREVIEW_HEIGHT,
     height: CAM_PREVIEW_WIDTH,
-    marginLeft: Dimensions.get('window').height / 2 - CAM_PREVIEW_HEIGHT / 2,
+    marginLeft: Dimensions.get("window").height / 2 - CAM_PREVIEW_HEIGHT / 2,
   },
   loadingMsg: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   camera: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     zIndex: 1,
   },
   svg: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
+    width: "100%",
+    height: "100%",
+    position: "absolute",
     zIndex: 30,
   },
   fpsContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     left: 10,
     width: 80,
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, .7)',
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, .7)",
     borderRadius: 2,
     padding: 8,
     zIndex: 20,
   },
   cameraTypeSwitcher: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     right: 10,
     width: 180,
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, .7)',
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, .7)",
     borderRadius: 2,
     padding: 8,
     zIndex: 20,
