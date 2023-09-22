@@ -16,6 +16,18 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5fa2f741-0022-4ac9-a118-e0b31c18529c"
+      }
+    },
+    "android": {
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.sadmansayem.posedetectionexpo"
+    }
   }
 }
